@@ -1,0 +1,120 @@
+\newpage
+
+\appendix
+
+\section*{Appendix: \quad Metazoan segmentation example}
+
+As a biologically inspired example, we propose here the model of \pref{fig:metazoan-nocoop} given in~\cite{PMR10-TCSB} of the metazoan segmentation network.
+This PH models three components containing two processes each.
+A controller gene $f$ activates the two others;
+the products of $a$ are responsible for a new pattern, while gene $c$ tends to inhibit $a$, thus removing the pattern.
+This negative feedback therefore leads to a sequence of activations and inhibitions of $a$, creating stripes.
+
+When applying the IG inference described in \pref{sec:infer-IG}, we obtain the IG given in \pref{fig:metazoan-BRN}(left).
+All the edges of this inferred IG exist in the original IG of~\cite{PMR10-TCSB} which was used to produce the PH.
+However, an edge $a \xrightarrow{+1} a$ is present in the original IG but is not found by our method.
+This can be explained by the absence of actions in the PH to model this self-influence.
+Furthermore, some self-influences model phenomena that impact the inferred parametrization rather than the edges of the IG
+%are rather inferred as parameters by our method than as edges in the IG
+(such as the action $\PHfrappe{f_1}{f_1}{f_0}$ which does not results in a $f \xrightarrow{-1} f$ edge).
+
+Then, the parameters inference presented in \pref{sec:infer-K} allows to infer, from the input PH of \pref{fig:metazoan-nocoop} and inferred IG of \pref{fig:metazoan-BRN}(left), the parameters given in \pref{fig:metazoan-BRN}(right).
+Some of the parameters, which are signaled with an interrogation mark, could not be inferred due to contradicting influences from the regulators.
+For instance, in context $\{c_0;f_1\}$, both actions $\PHfrappe{c_0}{a_0}{a_1}$ and $\PHfrappe{f_1}{a_1}{a_0}$ apply and result in a cycle of bounces between $a_0$ and $a_1$.
+Thus, no focal process is found in sort $a$, which explains why the parameter $K_{a,\{c\},\{f\}}$ is unknown.
+It is interesting to notice here that the action $\PHfrappe{f_1}{f_1}{f_0}$ previously mentioned simply results in the parameter value $K_{f,\emptyset,\emptyset} = [0;0]$.
+
+Because two parameters are impossible to infer, the original PH of \pref{fig:metazoan-nocoop} does not correspond to one unique BRN, but to a family of BRNs sharing the same IG but different parametrizations.
+This result and the method to find all admissible parametrizations of this family are given by \pref{ssec:admissible-K}.
+As both unknown parameters can take one value amongst $[0;0]$, $[1;1]$ and $[0;1]$, the family contains 9 different BRNs.
+
+By creating a cooperative sort involving $f$ and $c$, it is possible to refine the dynamics and avoid the concurrent actions that prevent all parameter inferences.
+Such a cooperative sort is described in the reference paper, and allows to infer a complete parametrization, thus matching the original PH to a unique BRN.
+
+\begin{figure}[p]
+\centering
+\scalebox{1.1}{
+\begin{tikzpicture}
+\path[use as bounding box] (-1,-1.5) rectangle (4,4);
+
+\TSort{(1,3)}{f}{2}{t}
+\TSort{(0,0)}{c}{2}{l}
+\TSort{(3,0)}{a}{2}{r}
+
+\THit{c_0}{selfhit, out=250, in=210, distance=30}{c_0}{.west}{c_1}
+\THit{c_1}{selfhit, out=120, in=150, distance=30}{c_1}{.west}{c_0}
+\THit{c_0}{}{a_0}{.west}{a_1}
+\THit{c_1}{}{a_1}{.west}{a_0}
+\path[bounce, bend left=60]
+\TBounce{c_0}{}{c_1}{.south west}
+\TBounce{c_1}{bend right=40}{c_0}{.north west}
+\TBounce{a_0}{bend left=60}{a_1}{.south west}
+\TBounce{a_1}{bend right=40}{a_0}{.north west}
+;
+
+\THit{f_1}{selfhit, out=50, in=120, distance=40}{f_1}{.north west}{f_0}
+\THit{f_1}{bend right, out=120, in=80, distance=150}{c_0}{.south east}{c_1}
+\THit{f_0}{}{c_1}{.north east}{c_0}
+\THit{f_1}{bend right, out=50, in=110, distance=50}{a_0}{.east}{a_1}
+\THit{f_0}{}{a_1}{.north}{a_0}
+\path[bounce, bend left=25]
+\TBounce{f_1}{bend right=50}{f_0}{.north}
+\TBounce{c_1}{bend left=50}{c_0}{.north east}
+\TBounce{c_0}{bend right=50}{c_1}{.south east}
+\TBounce{a_1}{bend left=50, out=100, in=120, distance=14}{a_0}{.north east}
+\TBounce{a_0}{bend right=40}{a_1}{.south east}
+;
+\end{tikzpicture}
+}
+
+\caption{\label{fig:metazoan-nocoop}
+The PH model of metazoan segmentation process. This model contains three components ($a$, $c$ and $f$) but no cooperative sort,
+leading to concurrent actions on $a$, such as: $\PHfrappe{f_1}{a_0}{a_1}$ and $\PHfrappe{c_1}{a_1}{a_0}$.
+}
+\end{figure}
+
+
+
+\begin{figure}[p]
+\begin{minipage}{0.4\linewidth}
+\centering
+\scalebox{1.2}{
+\begin{tikzpicture}[grn]
+\path[use as bounding box] (-1,-0.2) rectangle (2.5,1.5);
+\node[inner sep=0] (c) at (0,0) {c};
+\node[inner sep=0] (a) at (2,0) {a};
+\node[inner sep=0] (f) at (1,1.2) {f};
+%\path
+%  node[elabel, below=-1em of a] {$0..2$}
+%  node[elabel, below=-1em of b] {$0..1$}
+%  node[elabel, below=-1em of c] {$0..1$};
+\path[->]
+  (f) edge node[elabel, above right=-2pt] {$+1$} (a)
+  (f) edge node[elabel, above left=-2pt] {$+1$} (c)
+  (c) edge node[elabel, above=-4pt] {$-1$} (a)
+  (c) edge[loop left] node[elabel, left=-2pt] {$-1$} (c);
+%\path[->]
+%  (b) edge[bend right] node[elabel, below=-2pt] {$+1$} (a)
+%  (c) edge node[elabel, right=-2pt] {$+1$} (a)
+%  (a) edge[bend right] node[elabel, above=-5pt] {$-2$} (b);
+\end{tikzpicture}
+}
+\end{minipage}
+\begin{minipage}{0.6\linewidth}
+\centering
+\begin{align*}
+K_{f, \emptyset, \emptyset} & =  [0;0] \\
+K_{a, \emptyset, \{c;f\}} & =  [0;0] & K_{c, \emptyset, \{c;f\}} & =  [0;0] \\
+K_{a, \{f\}, \{c\}} & = \ \ \ ? & K_{c, \{c\}, \{f\}} & =  [1;1] \\
+K_{a, \{c\}, \{f\}} & = \ \ \ ? & K_{c, \{f\}, \{c\}} & =  [0;0] \\
+K_{a, \{c;f\}, \emptyset} & =  [1;1] & K_{c, \{c;f\}, \emptyset} & =  [1;1] \\
+\end{align*}
+\end{minipage}
+\caption{\label{fig:metazoan-BRN}
+(left)
+IG inferred from the PH model of metazoan segmentation given in \pref{fig:metazoan-nocoop}.
+(right)
+Parameters inferred from the PH model of \pref{fig:metazoan-nocoop} together with the (left) IG.
+The interrogation marks indicate parameters that could not be inferred due to the expression of opposite influences.
+}
+\end{figure}

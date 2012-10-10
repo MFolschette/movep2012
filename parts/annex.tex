@@ -1,0 +1,429 @@
+\appendix
+
+\newpage
+
+\begin{comment}
+\section{Formal definitions}
+
+\paragraph{Notations.}
+$[i;j]$ is the set of integers $\{ i, i+1, \dots, j \}$;
+we note $[i_1;j_1] \leq_{[]} [i_2;j_2] \EQDEF (i_1\leq j_1\wedge i_2\leq j_2)$
+and $[i_1;j_1] <_{[]} [i_2;j_2] \EQDEF
+%       [i_1;j_1] \leq_{[]} [i_2;j_2] \wedge (i_1\neq i_2 \vee j_1\neq j_2)$.
+(i_1<i_2 \wedge j_1\leq j_2) \vee (i_1\leq i_2\wedge j_1 < j_2)$.
+Given an integer $k$, $k<[i;j] \EQDEF k <i$ and $k>[i;j]\EQDEF k > j$.
+
+
+
+%%% Frameworks
+
+% BRN
+
+\begin{definition}[Effective levels ($\levels$)]\label{def:levels}
+Let $(\Gamma,E_+,E_-)$ be an IG and $a, b \in \Gamma$ two of its components:
+\begin{itemize}
+  \item if $a \xrightarrow{t} b \in E_+$, $\levelsA{a}{b} \DEF [t; l_a]$ and
+    $\levelsI{a}{b} \DEF [0; t-1]$;
+  \item if $a \xrightarrow{t} b \in E_-$, $\levelsA{a}{b} \DEF [0; t-1]$ and
+    $\levelsI{a}{b} \DEF [t; l_a]$;
+  \item otherwise, $\levelsA{a}{b} \DEF \levelsI{a}{b} \DEF \emptyset$.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Asynchronous dynamics]\label{def:dynamics}
+Let $s$ be a state of a BRN using Thomas' parameters $(\IG, K)$ where $\IG = (\Gamma, E_+, E_-)$.
+The state that succeeds to $s$ is given by the indeterministic function $f(s)$:
+\begin{align*}
+  f(s)  & = s' \Leftrightarrow \exists a \in \Gamma,
+    \GRNget{s'}{a} = f^a(s) \wedge
+    \forall b \in \Gamma, b \neq a, \GRNget{s}{b} = \GRNget{s'}{b}
+    \quad\text{, with}\\
+  f^a(s) & =
+  \begin{cases}
+    \GRNget{s}{a} + 1 & \text{if } \GRNget{s}{a} < K_{a,A,B} \\% \GRNres{a}{s}} \\
+    \GRNget{s}{a} & \text{if } \GRNget{s}{a} \in K_{a,A,B} \\ %\GRNres{a}{s}}\\
+    \GRNget{s}{a} - 1 & \text{if } \GRNget{s}{a} > K_{a,A,B} % \GRNres{a}{s}}
+  \end{cases}
+\text{, where $A,B=\GRNres{a}{s}$.}
+\end{align*}
+\end{definition}
+
+
+
+%%% Interaction Graph inference
+
+% Well-formed Process Hitting for Interaction Graph Inference
+
+\begin{align}
+\PHa(S_a,\ctx) & \DEF \{ \PHfrappe{b_i}{a_j}{a_k}\in\PHa \mid b_i\in\ctx \wedge a_j\in S_a \}
+\label{eq:PHa-ctx}
+\\
+\begin{split}
+E & \DEF \{(a_j,a_k)\in (S_a \times \PHl_a) \mid
+                        \exists\PHfrappe{b_i}{a_j}{a_k}\in \PHa(S_a,\ctx) \}
+\\
+V & \DEF S_a \cup \{ a_k\in L_a\mid \exists (a_j,a_k)\in E\}
+\end{split}
+\label{eq:bounce-graph}
+\end{align}
+
+\begin{definition}[$\focals(a,S_a,\ctx)$]\label{def:focals}
+The set of processes that are focal for processes in $S_a$ in the scope of $\PHa(S_a,\ctx)$
+are given by:
+%$\focals(a,S_a,\ctx)$ is the set of focal processes of sort $a$ in the context $\ctx$:
+\[
+\focals(a,S_a,\ctx) \DEF
+\begin{cases}
+\{ a_i \in V \mid \nexists (a_i,a_j)\in E\} & \text{if the digraph $(V,E)$ is acyclic},\\
+\emptyset & \text{otherwise.}\\
+\end{cases}
+\]
+\end{definition}
+
+\begin{definition}[Strict context for $S_a$]\label{def:strict-ctx}
+A context (set of processes) $\ctx$ is strict for $S_a\subseteq L_a$ if and only if
+$\{b_i,b_j\} \subset \ctx \wedge b\neq a \Rightarrow i=j$.
+\end{definition}
+
+\begin{equation}
+\Gamma \DEF \{a \in \PHs \mid \nexists \PHfrappe{b_i}{a_j}{a_k} \in \PHa, |j - k| > 1\}
+\label{eq:PH-components}
+\end{equation}
+
+\begin{property}[Well-formed cooperative sort]\label{pro:wf-cooperative-sort}
+A sort $\upsilon\in\PHs$ is a well-formed cooperative sort if and only if
+each configuration $\sigma$ of its predecessors leads $\upsilon$ to a unique focal process,
+denoted by $\upsilon(\sigma)$:
+\[
+\forall \sigma \in {\textstyle\prod_{
+a\in\PHdirectpredec{\upsilon} \wedge a\neq \upsilon}}
+\PHl_{a},
+\focals(\upsilon,\PHl_\upsilon,\sigma \cup \PHl_\upsilon) = \{ \upsilon(\sigma) \}\]
+\end{property}
+
+\begin{property}[Well-formed Process Hitting for IG inference]\label{pro:wf-ph}
+A PH is well-formed for IG inference if and only if the following conditions are verified:
+\begin{itemize}
+  \item each sort $a\in\PHs$ either belongs to $\Gamma$, or is a well-formed cooperative sort;
+  \item there is no cycle between cooperative sorts;
+  \item sorts having no action hitting them belong to $\Gamma$.
+\end{itemize}
+\end{property}
+
+
+
+% Interaction Inference
+
+\begin{align}
+\begin{split}
+\forall a \in \PHs, \PHpredec{a} &\DEF \{b \in \PHs \mid \exists n \in \mathbb{N}^*, \exists
+(c^k)_{k \in [0;n]} \in \PHs^{n+1}, \\
+                                   & \quad \quad c^0 = b \wedge c^n = a \\
+                                   & \quad \quad \wedge \forall k \in \llbracket 0 ; n-1 \rrbracket,
+                                                                   c^k \in \PHdirectpredec{c^{k+1}} \cap (\PHs\setminus\Gamma)\}
+\end{split}
+\label{eq:ph_predec}
+\\
+\forall a\in \PHs, \PHpredecgene{a} & \DEF \PHpredec{a} \cap \Gamma
+\label{eq:regulators}
+\end{align}
+
+\begin{align}
+\upsilon(\sigma) & \DEF
+\upsilon(\sigma \uplus \state{\upsilon'(\sigma) \mid
+        \upsilon'\in\PHdirectpredec{\upsilon} \wedge
+        \upsilon'\in\PHs\setminus\Gamma })
+\label{eq:cooperative-eval}
+\\
+\forall g\subset \Gamma,
+        \ctx_g(\sigma) & \DEF \{ \sigma[b] \mid b\in g \} \cup \{ \upsilon(\sigma) \mid
+\upsilon\in\PHdirectpredec{a} \setminus \Gamma \wedge g\cap \PHpredecgene{\upsilon} \neq \emptyset \}
+\label{eq:ctx-sigma}
+\end{align}
+
+We also note, for all $b \in \PHs$, $\ctx_{b}(\sigma) = \ctx_b(\sigma)$.
+
+\begin{equation}
+\gamma(b\rightarrow a)  \DEF \{ a, b \} \cup \{ c \in \Gamma \mid
+                        \exists \upsilon\in\PHs\setminus\Gamma,
+                                \upsilon\in\PHpredec{a} \wedge \{b,c\}\subset\PHpredec{\upsilon} \}
+\label{eq:cooperating-with-b}
+\end{equation}
+
+\begin{equation}
+X(a) = \mathcal C\left( (\PHpredecgene{a}, \{ \{b,c\} \mid
+                                \exists \upsilon\in \PHdirectpredec{a} \setminus \Gamma,
+                                        \{b,c\} \subset \PHpredecgene{\upsilon} \}) \right)
+\label{eq:influence-groups}
+\end{equation}
+
+
+\begin{proposition}[Edges inference]\label{pps:inference-edges}
+We define the set of positive (resp. negative) influences $\hat{E}_+$ (resp. $\hat{E}_-$) for any
+$a\in\Gamma$ by:
+\begin{align}
+\begin{split}
+\forall b\in\PHpredecgene{a}, b\neq a, \\
+b\xrightarrow l a \in \hat{E}_s & \Longleftrightarrow
+ \exists \sigma\in\textstyle\prod_{c\in\gamma(b\rightarrow a)} L_c, \exists b_i,b_{i+1}\in \PHl_b,\\
+& \qquad\qquad
+        \exists a_{j}\in\focals(a, \{\sigma[a]\}, \ctx_b(\sigma\{b_i\})), \\
+& \qquad\qquad
+        \exists a_{k}\in\focals(a, \{\sigma[a]\}, \ctx_b(\sigma\{b_{i+1}\})), \\
+& \qquad\qquad\qquad
+                        s = \f{sign}(k - j) \wedge l = i+1
+\end{split}
+\label{eq:edges-inference-b}
+\\
+\begin{split}
+a \xrightarrow l a \in \hat{E}_s & \Longleftrightarrow
+\exists g \in X(a), \sigma \in L_a\times \textstyle\prod_{b\in g} L_b,
+                        \exists a_i,a_{i+1}\in \PHl_a, \\
+& \qquad\qquad
+        \exists a_{j}\in\focals(a, \{a_i\}, \ctx_g(\sigma\{a_i\})), \\
+& \qquad\qquad
+        \exists a_{k}\in\focals(a, \{a_{i+1}\},  \ctx_g(\sigma\{a_{i+1}\})), \\
+& \qquad\qquad\quad
+                        k \neq j+1
+                                \wedge s = \f{sign}(k - j) \wedge l = i+1
+\end{split}
+\label{eq:edges-inference-a}
+\end{align}
+where $s \in \{ +, - \}$, $\bar s = + \EQDEF s = -$, $\bar s = - \EQDEF s = +$,
+$\f{sign}(n) = + \EQDEF n > 0$,
+$\f{sign}(n) = - \EQDEF n < 0$,
+and $\f{sign}(0) \DEF 0$.
+\end{proposition}
+
+\begin{proposition}[Interaction Graph inference]\label{pps:inference-IG}
+We infer $\IG = (\Gamma,E_+,E_-,E_\pm)$ from \pref{pps:inference-edges} as follows:
+\begin{align*}
+E_+ &= \{a \xrightarrow{t} b \mid \nexists a \xrightarrow{t'} b \in \hat{E}_-
+  \wedge t = \min \{ l \mid a \xrightarrow{l} b \in \hat{E}_+\}\} \\
+E_- &= \{a \xrightarrow{t} b \mid \nexists a \xrightarrow{t'} b \in \hat{E}_+
+  \wedge t = \min \{l \mid a \xrightarrow{l} b \in \hat{E}_-\}\} \\
+E_\pm &= \{a \rightarrow b \mid \exists a \xrightarrow{t} b \in \hat{E}_+ \wedge \exists a \xrightarrow{t'} b \in \hat{E}_-\} \\
+\end{align*}
+\end{proposition}
+
+
+
+%%% Parametrization inference
+
+% Parameters inference
+
+\begin{property}[Well-formed PH for parameter inference]\label{pro:wf-ph-K}
+A PH is well-formed for parameter inference if and only if
+it is well-formed for IG inference, and
+the IG $(\Gamma, E_+, E_-, E_\pm)$ inferred by \pref{pps:inference-IG}
+verifies $E_\pm=\emptyset$ and if the following property holds:
+\begin{align}
+\begin{split}
+\forall b\in \GRNreg{a} &,
+        \forall (i,j\in\levelsA{b}{a} \vee i,j\in\levelsI{b}{a}), \\
+& \qquad        \forall c, ( (b\neq a\wedge c=a) \vee (c\in\PHpredec{a} \wedge b\in\PHdirectpredec{c})), \\
+& \qquad \qquad
+                        \PHfrappe{b_i}{c_k}{c_l}\in\PHa \Leftrightarrow
+                                \PHfrappe{b_j}{c_k}{c_l}\in\PHa
+\end{split}
+\label{eq:wf-levels}
+\end{align}
+\end{property}
+
+\begin{align}
+\label{eq:param_context}
+\forall b\in\Gamma,~
+C_{a,A,B}^b & \DEF \begin{cases}
+\levelsA{b}{a} & \text{if $b \in A$,}\\
+\levelsI{b}{a} & \text{if $b \in B$,}\\
+L_b             & \text{otherwise;}\\
+\end{cases}
+\\
+\label{eq:param_context_coop}
+\forall \upsilon \in \PHpredec{a}\setminus\Gamma,~
+C_{a,A,B}^\upsilon & \DEF \{
+\upsilon(\sigma) \mid \sigma \in \textstyle\prod_{c\in\PHdirectpredec{\upsilon}}C_{a,A,B}^c \}
+\\
+C_{a,A,B} & \DEF \textstyle\bigcup_{b\in\PHpredec{a}} C^b_{a,A,B}
+\label{eq:K-ctx}
+\end{align}
+
+\begin{proposition}[Parameter inference]
+\label{pps:param_K}
+Let $(\PHs, \PHl, \PHh)$ be a Process Hitting well-formed for parameter inference, and $\IG = (\Gamma,
+E_+, E_-)$ the inferred IG.
+Let $A$ (resp. $B$) $\subseteq \Gamma$ be the set of regulators that activate (resp. inhibit) a sort
+$a$.
+%If $\focals(a,C_{a,A,B})$ is a non-empty interval, then $K_{a,A,B} = \focals(a, C_{a,A,B})$.
+If $\focals(a,C^a_{a,A,B},C_{a,A,B})=[a_i;a_j]$ is a non-empty interval,
+        then $K_{a,A,B} = [i;j]$.
+\end{proposition}
+
+
+
+% Admissible parametrizations
+
+\begin{property}[Parameter validity]\label{pro:K-valid}
+A parameter $K_{a,A,B}$ is valid w.r.t. the PH iff the following equation is verified:
+\begin{align*}
+\forall a_i\in C^a_{a,A,B},
+                a_i \notin K_{a,A,B} \Longrightarrow (
+  \exists \PHfrappe{c_k}{a_i}{a_j}\in\PHa, & c_k \in C^c_{a,A,B} \\
+ \wedge a_i < K_{a,A,B} \Rightarrow j > i
+ & \wedge  a_i > K_{a,A,B} \Rightarrow j <i )
+\end{align*}
+\end{property}
+
+\begin{property}[Extreme values assumption]
+Let $\IG = (\Gamma, E_+, E_-)$ be an IG. A parametrization $K$ on $\IG$ satisfies the \emph{extreme values assumption} iff:
+\label{prop:param_enum_extreme}
+\[
+  \forall b \in \Gamma, \GRNreg{b} \neq \emptyset \Rightarrow 0 \in K_{b,\emptyset,\GRNreg{b}} \wedge l_b \in K_{b,\GRNreg{b},\emptyset}
+\]
+\end{property}
+
+\begin{property}[Activity assumption]
+\label{prop:param_enum_activity}
+Let $\IG = (\Gamma, E_+, E_-)$ be an IG. A parametrization $K$ on $\IG$ satisfies the \emph{activity assumption} iff:
+\begin{align*}
+  \forall b \in \Gamma, \forall a \in \GRNreg{b}, \exists (A;B) \in \GRNallres{a}, K_{b,A,B} <_{[]} K_{b,A \cup \{b\},B \setminus \{b\}}
+\\
+  \forall b \in \Gamma, \forall a \in \GRNreg{b}, \exists (A;B) \in \GRNallres{a}, K_{b,A \setminus \{b\},B \cup \{b\}} <_{[]} K_{b,A,B}
+\end{align*}
+\end{property}
+
+\begin{property}[Monotonicity assumption]
+\label{prop:param_enum_monotonicity}
+Let $\IG = (\Gamma, E_+, E_-)$ be an IG. A parametrization $K$ on $\IG$ satisfies the \emph{monotonicity assumption} iff:
+\[
+  \forall b \in \Gamma, \forall (A;B), (A';B') \in \GRNallres{b},
+  A \subset A' \wedge B' \subset B \Rightarrow K_{b,A,B} \leq_{[]} K_{b,A',B'}
+\]
+\end{property}
+
+\end{comment}
+
+
+
+\newpage
+
+\section{Figures}
+
+\begin{figure}[h]
+\centering
+\scalebox{1.1}{
+\begin{tikzpicture}
+\path[use as bounding box] (-2,-6) rectangle (7,0.5);
+
+\TSort{(0,0)}{b}{2}{t}
+\TSort{(0,-3.8)}{c}{2}{b}
+\TSort{(4.5,-3)}{a}{3}{r}
+
+\TSetTick{bc}{0}{00}
+\TSetTick{bc}{1}{01}
+\TSetTick{bc}{2}{10}
+\TSetTick{bc}{3}{11}
+% \TSetSortLbcel{bc}{$\neg a\wedge b$}
+\TSort{(-0.5,-2)}{bc}{4}{b}
+
+\THit{b_1}{bend right}{bc_0}{.north}{bc_2}
+\THit{b_1}{bend right}{bc_1}{.north}{bc_3}
+\THit{b_0}{}{bc_2}{.north west}{bc_0}
+\THit{b_0}{}{bc_3}{.north west}{bc_1}
+
+\THit{c_0}{}{bc_1}{.south}{bc_0}
+\THit{c_0}{}{bc_3}{.south}{bc_2}
+\THit{c_1}{}{bc_0}{.south}{bc_1}
+\THit{c_1}{}{bc_2}{.south}{bc_3}
+
+\path[bounce, bend right=25]
+\TBounce{bc_2}{}{bc_0}{.north east}
+\TBounce{bc_3}{}{bc_1}{.north east}
+;
+\path[bounce, bend left=80, distance=30]
+\TBounce{bc_0}{}{bc_2}{.north}
+\TBounce{bc_1}{}{bc_3}{.north}
+;
+\path[bounce, bend right]
+\TBounce{bc_0}{}{bc_1}{.west}
+\TBounce{bc_2}{}{bc_3}{.west}
+;
+\path[bounce, bend left]
+\TBounce{bc_3}{}{bc_2}{.east}
+\TBounce{bc_1}{}{bc_0}{.east}
+;
+
+\THit{bc_3}{thick}{a_1}{.north west}{a_2}
+\THit{bc_0}{thick,bend right=130, distance=150}{a_1}{.south east}{a_0}
+\path[bounce, bend left=40]
+\TBounce{a_1}{thick}{a_2}{.south west}
+\TBounce{a_1}{thick}{a_0}{.north east}
+;
+
+\THit{b_0}{thick,bend left,out=50,in=150}{a_2}{.west}{a_1}
+\THit{b_1}{thick,bend left,out=80,in=70,distance=100}{a_0}{.east}{a_1}
+\path[bounce]
+\TBounce{a_2}{thick,bend right=40}{a_1}{.west}
+\TBounce{a_0}{thick,bend right=40}{a_1}{.east}
+;
+
+\THit{c_0}{thick,bend left,out=260,in=320, distance=150}{a_2}{.east}{a_1}
+\THit{c_1}{thick,}{a_0}{.north west}{a_1}
+\path[bounce]
+\TBounce{a_2}{thick,bend left=40}{a_1}{.north east}
+\TBounce{a_0}{thick,bend left=40}{a_1}{.south west}
+;
+
+\THit{a_2}{bend left=20}{b_1}{.south}{b_0}
+\path[bounce, bend left]
+\TBounce{b_1}{}{b_0}{.south}
+;
+
+\end{tikzpicture}
+}
+
+\caption{\label{fig:runningPH}
+A PH example with four sorts: three components ($a$, $b$ and $c$) and a cooperative sort ($bc$).
+Actions targeting $a$ are in thick lines.
+}
+\end{figure}
+
+\begin{figure}[h]
+\begin{minipage}{0.4\linewidth}
+\centering
+\scalebox{1.2}{
+\begin{tikzpicture}[grn]
+\path[use as bounding box] (-0.3,-0.75) rectangle (2.5,1.5);
+\node[inner sep=0] (a) at (2,0) {a};
+\node[inner sep=0] (b) at (0,0) {b};
+\node[inner sep=0] (c) at (2,1.2) {c};
+%\path
+%  node[elabel, below=-1em of a] {$0..2$}
+%  node[elabel, below=-1em of b] {$0..1$}
+%  node[elabel, below=-1em of c] {$0..1$};
+\path[->]
+  (b) edge[bend right] node[elabel, below=-2pt] {$+1$} (a)
+  (c) edge node[elabel, right=-2pt] {$+1$} (a)
+  (a) edge[bend right] node[elabel, above=-5pt] {$-2$} (b);
+\end{tikzpicture}
+}
+\end{minipage}
+\begin{minipage}{0.6\linewidth}
+\centering
+\begin{align*}
+K_{a,\{b,c\},\emptyset} &= [2 ; 2] & K_{b,\{a\},\emptyset} &= [0 ; 1] \\
+K_{a,\{b\},\{c\}} &= [1 ; 1] & K_{b,\emptyset,\{a\}} &= [0 ; 0] \\
+K_{a,\{c\},\{b\}} &= [1 ; 1] &&\\
+K_{a,\emptyset,\{b,c\}} &= [0 ; 0] & K_{c,\emptyset,\emptyset} &= [0 ; 1]
+\end{align*}
+\end{minipage}
+\caption{\label{fig:runningBRN}
+(left)
+IG example.
+Regulations are represented by the edges labeled with their sign and threshold.
+For instance, the edge from $b$ to $a$ is labeled $+1$, which stands for: $b \xrightarrow{1} a \in
+E_+$.
+(right)
+Example parametrization of the left IG.
+}
+\end{figure}
