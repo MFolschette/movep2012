@@ -2,90 +2,38 @@
 
 In order to infer a complete BRN, one has to find the Interaction Graph (IG) first, as some constraints on the parametrization rely on it.
 Inferring the IG is an abstraction step which consists, from atomistic actions of a PH, in determining the global influence of every component on each of its successors.
-We consider hereafter a global PH $(\PHs,\PHl,\PHa)$ on which the IG inference is to be performed.
+%We consider hereafter a global PH $(\PHs,\PHl,\PHa)$ on which the IG inference is to be performed.
 
-We denote \emph{context} a set $\ctx$ of processes that are potentially active.
-Many of the inferences defined in the rest of this paper rely on the knowledge of \emph{focal processes} $\focals(a,S_a,\ctx)$
-amongst a subset $S_a \subset \PHl_a$ of the processes of a sort $a$, w.r.t. a given context $\ctx$.
-Let $H$ be the set of actions whose hitters are in the context $\ctx$ and whose targets are in $S_a$;
-we call $G$ the digraph whose edges are $\{(a_j; a_k) \mid \PHfrappe{b_i}{a_j}{a_k} \in H\}$
-and nodes are $S_a \cup \{a_j, a_k \mid \PHfrappe{b_i}{a_j}{a_k} \in H\}$.
-\begin{itemize}
-  \item If $G$ is acyclic, we define $\focals(a,S_a,\ctx)$ as the set of nodes of $G$ with no outgoing edge, \ie the set of processes of $a$ that are the bounce of an action in $H$ but that are not the target of any action in $H$.
-Thus, if $\focals(a,S_a,\ctx)$ is not empty, we expect, starting from a process in $S_a$ and under some conditions on $\ctx$, to always reach one focal process in a bounded number of actions.
-  \item If $G$ contains a cycle, then $\focals(a,S_a,\ctx) = \emptyset$ as there exists a sequence of actions in $H$ that can be played successively in a loop.
-\end{itemize}
-%If the set of focal processes is empty for a given context, this means that no stable state can be reached in this context in a finite number of actions (due to the presence of a cycle amongst bounces).
-
-\begin{example*}
-In the PH of \pref{fig:runningPH}, we obtain:
-\begin{align*}
-\focals(a,L_a,\{bc_{00}\}) &= \{ a_0 \} & \focals(a,L_a,\{bc_{11}\}) &= \{ a_2 \} \\
-\focals(a,L_a,\{bc_{10}\}) &= \{ a_1 \} & \focals(a,L_a,\{bc_{01}\}) &= \{ a_1 \}
-\end{align*}
-\end{example*}
+This step assumes that the studied PH defines two types of sorts: the sorts corresponding to BRN components, that will appear in the IG, and the cooperative sorts.
+The identification of these two kind of sorts relies on the observation of their possible behavior, which in both cases has to observe some rules.
 
 
 
-\subsection{Well-formed Process Hitting for Interaction Graph Inference}\label{ssec:wf}
+\subsection*{IG Inference}\label{ssec:infer-IG}
 
-The inference of an IG from a PH assumes that the PH defines two types of sorts: the sorts corresponding to BRN components, that will appear in the IG, and the cooperative sorts.
-The identification of sorts modeling components relies on the observation that their processes represent (ordered) qualitative levels;
-hence, to respect BRNs dynamics, an action on such a sort cannot make it bounce to a process at a distance more than one.
-Any sort that does not act as a component should then be treated as a cooperative sort, whose role is to compute the current state of set of cooperating processes, as explained in \pref{ssec:PH}.
-Thus, for each sub-state of its predecessors, a cooperative sort should converge to a unique focal process.
-In addition of having either component sorts or cooperative sorts, we also require that there is no cycle between cooperative sorts, and that sorts being never hit (\ie serving as an invariant environment) are components.
+%Inferring the underlying IG of a PH consists in finding the influence of each regulator of every component, in order to determine the sets $E_+$ and $E_-$.
+%We aim at inferring that $b$ activates (inhibits) $a$ if there exists a configuration where increasing the level of $b$ makes possible the increase (decrease) of the level of $a$.
+
+Inferring global influences of a predecessor $b$ on a component $a$ requires to find “local influences” from this predecessor first, by considering a given state and changing only the active process of $b$.
+The aim is to compare the set of processes towards which the component $a$ will evolve, for each active process of $b$, leaving the active process of all the other sorts unchanged.
+Indeed, if after increasing the level of $b$ (\ie activating a higher process of $b$) we notice that $a$ tends to reach a higher (resp. lower) level, we can then deduce that $b$ activates (resp. inhibits) $a$ in this selected state.
+This test has to be performed on every possible state in order to compute every local influence.
+In fact, the enumeration of all possible states can be restrained to sub-states on the predecessors of $a$ only, thus excluding components that have no influence on $a$.
+
+The knowledge of all the local influences then allows to infer all global influences between components.
+Indeed, if all local influences of $b$ on $a$ are the same (activations or inhibitions) we can deduce that the global influence of $b$ on $a$ is the also same, and the related threshold is the lowest level of $b$ for which we can observe such an influence.
+An unsigned edge with no threshold is inferred if two different local influences are found, or in particular cases (when a behavior cannot be represented as a BRN).
 
 \begin{example*}
-In the PH of \pref{fig:runningPH},
-$a$, $b$ and $c$ are valid components as they repsect the above conditions.
-Furthermore, $bc$ is a valid cooperative sort as:
-\begin{align*}
-\forall i, j \in \{0, 1\}, \focals(bc, \PHl_{bc}, \{b_i, c_j\}) &= \{bc_{ij}\}
-\end{align*}
-%Hence, this PH is well-formed for IG inference, and $a$, $b$ and $c$ are the components.
-\end{example*}
+Consider, in the PH of \pref{fig:runningPH}, the sub-state $\PHstate{b_0, c_0, bc_{00}}$ of predecessors of $a$.
+In this sub-state, $a$ can be hit by the following actions: $\{\PHfrappe{b_0}{a_2}{a_1}, \PHfrappe{c_0}{a_2}{a_1}, \PHfrappe{bc_{00}}{a_1}{a_0}\}$.
+Thus, if $a$ evolves, it will eventually reach process $a_0$.
+But if a higher process of $b$ is activated, that is, $b_1$ instead of $b_0$, thus considering the sub-state $\PHstate{b_1, c_0, bc_{10}}$,
+then $a$ can be hit by the two following actions: $\{\PHfrappe{b_1}{a_0}{a_1}, \PHfrappe{c_0}{a_2}{a_1}\}$,
+and will eventually reach process $a_1$.
 
-
-
-\subsection{Interaction Inference}\label{ssec:infer-IG}
-
-Inferring the underlying IG of a PH consists in finding the influence of each regulator of every component, in order to determine the sets $E_+$ and $E_-$.
-We aim at inferring that $b$ activates (inhibits) $a$ if there exists a configuration where increasing the level of $b$ makes possible the increase (decrease) of the level of $a$.
-
-Inferring a global influence requires to focus on local influences first.
-We rely on the search of \emph{local influence switches} of $b$ on $a$ that point out local changes in this influence (activations or inhibitions) between levels $b_i$ and $b_{i+1}$.
-It is also required to consider the whole set of components cooperating with $b$ to hit $a$, as the evolution of $a$ also depends on them.
-This method compares the set of focal processes of $a$ in a context containing $b_i$ and some cooperating processes, and in the same context containing $b_{i+1}$;
-a positive (resp. negative) local influence switch is found if the former is higher (resp. lower) than the latter, regarding an appropriate comparison relation on sets of processes.
-If both sets are identical, no local influence switch is inferred as the influence of $b$ on $a$ is the same for both $b_i$ and $b_{i+1}$ in this context.
-
-Once all local influence switches of $b$ on $a$ have been found (for all couples of $b_i$ and $b_{i+1}$, and all contexts of other components cooperating with $b$ to hit $a$),
-we are able to infer a positive (resp. negative) edge if there exist only positive (resp. negative) local influence switches of $b$ on $a$.
-The threshold of such an edge is the minimum threshold for which an influence switch has been found.
-We infer an unsigned edge (with no threshold) if two influence switches of different types are found.
-
-\begin{comment}
-The inference of the \emph{influence switches}, which point out local changes in the influence (activations or inhibitions) between levels $b_i$ and $b_{i+1}$, requires to consider the whole set of components cooperating with $b$ to hit $a$.
-The method relies on the comparison of the focal processes of $a$ in a context containing $b_i$, and in the same context containing $b_{i+1}$.
-We are able to infer a positive (resp. negative) edge if there exist corresponding influence switches with the same sign only; the threshold of such an edge is the minimum threshold for which an influence switch has been found.
-We infer an unsigned edge (with non threshold) when two influence switches with different signs are found.
-\end{comment}
-
-\begin{example*}
-In the PH of \pref{fig:runningPH}, we have:
-\begin{align*}
-\focals(b, \PHl_b, \{a_0\}) &= \{b_0, b_1\} & \focals(b, \PHl_b, \{a_2\}) &= \{b_0\} \\
-\focals(b, \PHl_b, \{a_1\}) &= \{b_0, b_1\}
-\end{align*}
-Therefore, we infer a negative influence switch of $a$ on $b$ between levels $a_1$ and $a_2$, but not between $a_0$ and $a_1$, because:
-\begin{align*}
-\focals(b, \PHl_b, \{a_0\}) &= \focals(b, \PHl_b, \{a_1\}) \\
-\focals(b, \PHl_b, \{a_1\}) &\succ \focals(b, \PHl_b, \{a_2\})
-\end{align*}
-We thus deduce that: $a \xrightarrow{2} b \in E_-$.
-
-Indeed, the IG inference from the PH of \pref{fig:runningPH} gives
-$E_+ = \{b \xrightarrow{1} a, c \xrightarrow{1} a\}$ and
-$E_- = \{a \xrightarrow{2} b\}$, corresponding to the IG of \pref{fig:runningBRN}.
+Therefore, in this sub-state of predecessors of $a$, $b$ locally activates $a$.
+Furthermore, if this analysis is carried for all possible sub-states of predecessors of $a$, only local activations are found,
+thus giving the following result: $b \xrightarrow{1} a \in E_+$.
+After applying this method to all pairs of influence, the IG given in \pref{fig:runningBRN} is inferred.
 \end{example*}

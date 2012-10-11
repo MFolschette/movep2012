@@ -49,7 +49,7 @@ expressed in PH by building a \emph{cooperative sort}.
 \pref{fig:runningPH} shows an example of a cooperative sort $bc$ between sorts $b$ and $c$,
 defined with 4 processes (one for each sub-state of the presence of processes $b_1$ and $c_1$).
 For the sake of clarity, processes of $bc$ are indexed using the sub-state they represent.
-Hence, $bc_{01}$ represents the sub-state $\state{b_0,c_1}$, and so on.
+Hence, $bc_{01}$ represents the sub-state $\PHstate{b_0,c_1}$, and so on.
 Each process of sort $b$ and $c$ hit $bc$ to make it bounce to the process reflecting the status of the sorts $b$
 and $c$ (e.g., $\PHfrappe{b_1}{bc_{00}}{bc_{10}}$ and $\PHfrappe{b_1}{bc_{01}}{bc_{11}}$).
 Then, to represent the cooperation between processes $b_1$ and $c_1$,
