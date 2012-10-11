@@ -63,7 +63,7 @@ If both sets are identical, no local influence switch is inferred as the influen
 Once all local influence switches of $b$ on $a$ have been found (for all couples of $b_i$ and $b_{i+1}$, and all contexts of other components cooperating with $b$ to hit $a$),
 we are able to infer a positive (resp. negative) edge if there exist only positive (resp. negative) local influence switches of $b$ on $a$.
 The threshold of such an edge is the minimum threshold for which an influence switch has been found.
-We infer an unsigned edge (with non threshold) if two influence switches of different types are found.
+We infer an unsigned edge (with no threshold) if two influence switches of different types are found.
 
 \begin{comment}
 The inference of the \emph{influence switches}, which point out local changes in the influence (activations or inhibitions) between levels $b_i$ and $b_{i+1}$, requires to consider the whole set of components cooperating with $b$ to hit $a$.
