@@ -4,8 +4,8 @@
 A Process Hitting (PH) (\pref{def:PH}) gathers a finite number of concurrent \emph{processes}
 grouped into a finite set of \emph{sorts}.
 A sort stands for a component of the system while a process, which belongs to a unique sort, stands for one of its expression levels.
-A process is thus noted $a_i$ where $a$ is the sort and $i$ is the process identifier within the sort $a$.
-At any time, exactly one process of each sort is present; a state of the PH thus corresponds to such a set of processes.
+A process is noted $a_i$ where $a$ is the sort and $i$ is the process identifier within the sort $a$.
+At any time, exactly one process of each sort is present; a \emph{state} of the PH corresponds to such a set of processes.
  
 The concurrent interactions between processes are defined by a set of
 \emph{actions}.
@@ -57,6 +57,7 @@ the process $bc_{11}$ hits $a_1$ to make it bounce to $a_2$ instead of
 independent hits from $b_1$ and $c_1$.
 The same cooperative sort is used to make $b_0$ and $c_0$ cooperate to hit $a_1$ and make it bounce to $a_0$.
 
+\begin{comment}
 We note that cooperative sorts are standard PH sorts and do not involve any
 special treatment regarding the semantics of related actions.
 However, it is worth noticing they introduce a temporal shift in their application.
@@ -64,6 +65,7 @@ This allows the existence of interleaving of actions leading to a cooperative so
 past sub-state of the presence of the cooperative processes.
 The resulting behavior is then an over-approximation
 of the realization of an instantaneous cooperation.
+\end{comment}
 
 \begin{example*}
 \pref{fig:runningPH} represents a PH $(\PHs,\PHl,\PHa)$ with especially:
