@@ -3,13 +3,13 @@
 Given the IG inferred from a PH as presented in the previous section, one can find the discrete parameters that model the behavior of the studied PH using the method presented in the following.
 As some parameters may remain undetermined, another step allows to enumerate all parametrizations compatible with the inferred parameters.
 
-\subsection{Independent parameters inference}
+\subsection*{Independent parameters inference}
 
 This subsection presents some results related to the inference of independent discrete parameters from a given PH,
 equivalent to those presented in \cite{PMR10-TCSB}.
 We suppose in the following that the considered PH is well-formed for parameters inference, \ie its inferred IG does not contain any unsigned edge,
 and in each sort, all processes activating (\resp inhibiting) another component share the same behavior.
-Let $K_{a,A,B}$ be the parameter we want to infer for a given component $a \in \Gamma$
+Let $K_{a,A,B}$ be the parameter we want to infer for a given component $a \in \Gamma$,
 and $A \subset \GRNreg{a}$ (\resp $B \subset \GRNreg{a}$) a set of its activators (\resp inhibitors).
 This inference, as for the IG inference, relies on the search of focal processes of the component for the given configuration of its regulators.
 
@@ -18,23 +18,24 @@ From all contexts of all predecessors of $a$, we create a global context that re
 The parameter $K_{a,A,B}$ specifies towards which values $a$ eventually evolves as long as this context holds, which is precisely given by the set of focal processes.
 
 \begin{example*}
-In the PH of \pref{fig:runningPH}, we have in particular:
-\begin{align*}
-\focals(b,L_b,\{a_0, a_1\}) = \{b_0, b_1\} &\text{, which gives: } K_{b,\{a\},\emptyset} = [0 ; 1], \\
-\focals(a,L_a,\{b_1, c_1, bc_{11}\}) = \{a_2\} &\text{, which gives: } K_{a,\{b,c\},\emptyset} = [2 ; 2] \text{, and} \\
-\focals(a,L_a,\{b_1, c_0, bc_{10}\}) = \{a_1\} &\text{, which gives: } K_{a,\{b\},\{c\}} = [1;1].
-\end{align*}
+Consider the PH of \pref{fig:runningPH}, from which the IG of \pref{fig:runningBRN} is inferred.
+Inferring the parameter $K_{a,\{b,c\},\emptyset}$ requires to understand the behavior of $a$ in the sub-state $\PHstate{b_1, c_1, bc_{11}}$.
+In this sub-state, $a$ tends to eventually reach process $a_2$; thus, we can deduce the parameter: $K_{a,\{b,c\},\emptyset} = [2 ; 2]$.
+Inferring all parameters leads to the complete parametrization given in \pref{fig:runningBRN}.
 \end{example*}
 
+\begin{comment}
 This method sometimes faces cases with opposite effects on a component, leading to either an indeterministic evolution or to oscillations.
 Such an indeterminism is not possible in a BRN, and the inference of the targeted parameter is impossible.
 In order to avoid such inconclusive cases, one has to ensure that no such behavior is allowed
 by either removing undesired actions or using cooperative sorts to prevent opposite influences between regulators.
+\end{comment}
 
-\subsection{Admissible parametrizations enumeration}\label{ssec:admissible-K}
+\subsection*{Admissible parametrizations enumeration}\label{ssec:admissible-K}
 
 The previous inference step may leave several parameters undetermined, due to missing cooperations or behaviors impossible to represent in a BRN.
-Thus, the last step of this method is to enumerate all valid values for each parameter that could not be inferred given the results of the previous steps.
+If it is not possible to change the PH model in order to remove these inconclusive cases,
+one can perform a last step to enumerate all valid values for each parameter that could not be inferred given the above results.
 %In the following, we try to constrain all parameters that are left undetermined with the method presented in the previous subsection.
 We consider that a parameter is valid if any transition it involves in the resulting BRN is allowed by the studied PH by actions that represent this behavior.
 We also add some biological constraints on the whole parametrizations, given in \cite{BernotSemBRN}.
@@ -57,4 +58,5 @@ then the parametrizations $K$ that answer our expectations are the ones so that:
 
 Answer Set Programming (ASP) \cite{Baral03} turns out to be effective for the enumerative searches developed in this paper,
 as it efficiently tackles the inherent complexity of the models we use, thus allowing an efficient execution of the formal tools developed.
-Furthermore, ASP finds a particularly interesting application in the research of admissible parametrizations regarding the properties presented above, as this enumeration can be naturally formulated with the use of aggregates, and constraints allow to remove all non-admissible models.
+Furthermore, ASP finds a particularly interesting application in the research of admissible parametrizations regarding the properties presented above, as this enumeration can be naturally formulated with the use of aggregates.
+%, and constraints allow to remove all non-admissible models.
