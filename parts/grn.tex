@@ -7,13 +7,13 @@ $l_a$ denotes the maximum level of a component $a$.
 \begin{definition}[Interaction Graph]
 \label{def:ig}
 An \emph{Interaction Graph} (IG) is a triple $(\Gamma, E_+, E_-)$ where $\Gamma$ is a finite number of \emph{components},
-and $E_+$ (resp. $E_-$) $\subset \{a \xrightarrow{t} b \mid a, b \in \Gamma \wedge t \in [1; l_a]\}$
-is the set of positive (resp. negative) \emph{regulations} between two nodes, labeled with a \emph{threshold}.
+and $E_+$ (\resp $E_-$) $\subset \{a \xrightarrow{t} b \mid a, b \in \Gamma \wedge t \in [1; l_a]\}$
+is the set of positive (\resp negative) \emph{regulations} between two nodes, labeled with a \emph{threshold}.
 
 A regulation from $a$ to $b$ is uniquely referenced:
-if $a \xrightarrow{t} b \in E_+$ (resp. $E_-$),
-then $\nexists a \xrightarrow{t'} b \in E_+ \text{ (resp. $E_-$)}, t' \neq t$
-and $\nexists a \xrightarrow{t'} b \in E_-\text{ (resp. $E_+$)}, t' \in \mathbb{N}$.
+if $a \xrightarrow{t} b \in E_+$ (\resp $E_-$),
+then $\nexists a \xrightarrow{t'} b \in E_+ \text{ (\resp $E_-$)}, t' \neq t$
+and $\nexists a \xrightarrow{t'} b \in E_-\text{ (\resp $E_+$)}, t' \in \mathbb{N}$.
 \end{definition}
 
 \noindent
@@ -28,15 +28,15 @@ While the use of intervals as parameters does not add expressivity in Boolean ne
 %Indeed, if a parameter is an interval of three values, it is impossible to split the three cases with the boolean definition of resources.
 
 \begin{definition}[Discrete parameter $K_{x,A,B}$ and Parametrization $K$]\label{def:param}
-Let $x \in \Gamma$ be a given component and $A$ (resp. $B$) $\subset \GRNreg{x}$ a set of its \emph{activators} (resp. \emph{inhibitors}),
+Let $x \in \Gamma$ be a given component and $A$ (\resp $B$) $\subset \GRNreg{x}$ a set of its \emph{activators} (\resp \emph{inhibitors}),
 such that $A \cup B = \GRNreg{x}$ and $A \cap B = \emptyset$.
 The discrete \emph{parameter} $K_{x,A,B} = [i; j]$ is a non-empty interval so that $0 \leq i \leq j \leq l_x$.
-With regard to the dynamics, $x$ will tend towards $K_{x,A,B}$ in the states where its activators (resp. inhibitors) are the regulators in set $A$ (resp. $B$).
+With regard to the dynamics, $x$ will tend towards $K_{x,A,B}$ in the states where its activators (\resp inhibitors) are the regulators in set $A$ (\resp $B$).
 The complete map $K = (K_{x,A,B})_{x,A,B}$ of discrete parameters for an IG is called a \emph{parametrization} of this IG.
 \end{definition}
 
 At last, dynamics are defined in BRN in an unitary and asynchronous way:
-from a given state $s$, a transition to another state $s'$ is possible provided that only one component $a$ will evolve of exactly one level towards $K_{a,A,B}$, where $A$ (resp. $B$) is the set of activators (resp. inhibitors) of $a$ in $s$.
+from a given state $s$, a transition to another state $s'$ is possible provided that only one component $a$ will evolve of exactly one level towards $K_{a,A,B}$, where $A$ (\resp $B$) is the set of activators (\resp inhibitors) of $a$ in $s$.
 
 \begin{example*}
 \pref{fig:runningBRN}(left) represents an Interaction Graph $(\Gamma,E_+,E_-)$ with
