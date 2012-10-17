@@ -24,39 +24,15 @@ In this sub-state, $a$ tends to eventually reach process $a_2$; thus, we can ded
 Inferring all parameters leads to the complete parametrization given in \pref{fig:runningBRN}.
 \end{example*}
 
-\begin{comment}
-This method sometimes faces cases with opposite effects on a component, leading to either an indeterministic evolution or to oscillations.
-Such an indeterminism is not possible in a BRN, and the inference of the targeted parameter is impossible.
-In order to avoid such inconclusive cases, one has to ensure that no such behavior is allowed
-by either removing undesired actions or using cooperative sorts to prevent opposite influences between regulators.
-\end{comment}
-
 \subsection*{Admissible parametrizations enumeration}\label{ssec:admissible-K}
 
 The previous inference step may leave several parameters undetermined, due to missing cooperations or behaviors impossible to represent in a BRN.
 If it is not possible to change the PH model in order to remove these inconclusive cases,
 one can perform a last step to enumerate all valid values for each parameter that could not be inferred given the above results.
-%In the following, we try to constrain all parameters that are left undetermined with the method presented in the previous subsection.
 We consider that a parameter is valid if any transition it involves in the resulting BRN is allowed by the studied PH by actions that represent this behavior.
 We also add some biological constraints on the whole parametrizations, given in \cite{BernotSemBRN}.
 These constraints lead to a family of admissible parametrizations which we can enumerate and are ensured to observe a coherent behavior that is included in the original PH.
 
-\begin{comment}
-This approach can be considered as abductive reasoning as some information is added by the enumeration.
-If we denote:
-\begin{itemize}
-  \item $M$ the fact that the behavior of the resulting BRN observes the dynamics of the PH,
-  \item $B$ the fact (which is granted) that the IG and the series of necessary parameters inferred from the PH are parts of the resulting BRN,
-  \item $H_K$ the hypothesis that $K$ is an admissible complete parametrization,
-\end{itemize}
-then the parametrizations $K$ that answer our expectations are the ones so that:
-\begin{itemize}
-  \item $H_K$ is compatible with $B$, that is, all parameters of $K$ are compatible with the inferred parameters,
-  \item $B \wedge H_K \models M$, that is, the inferred IG together with $K$ represent a BRN observing the behavior included into the dynamics of the original PH.
-\end{itemize}
-\end{comment}
-
 Answer Set Programming (ASP) \cite{Baral03} turns out to be effective for the enumerative searches developed in this paper,
 as it efficiently tackles the inherent complexity of the models we use, thus allowing an efficient execution of the formal tools developed.
-Furthermore, ASP finds a particularly interesting application in the research of admissible parametrizations regarding the properties presented above, as this enumeration can be naturally formulated with the use of aggregates.
-%, and constraints allow to remove all non-admissible models.
+Furthermore, ASP finds a particularly interesting application in the research of admissible parametrizations regarding the properties presented above, as this enumeration can be naturally formulated by using of aggregates and constraints.
