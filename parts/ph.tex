@@ -22,12 +22,9 @@ A \emph{Process Hitting} is a triple $(\PHs,\PHl,\PHa)$:
 \begin{itemize}
 \item $\PHs = \{a,b,\dots\}$ is the finite set of \emph{sorts};
 \item $\PHl = \prod_{a\in\PHs} \PHl_a$ is the set of states with $\PHl_a = \{a_0,\dots,a_{l_a}\}$
-the finite set of \emph{processes} of sort $a\in\Sigma$ and $l_a$ a positive integer, with
-	$a\neq b\Rightarrow \forall(a_i,b_j)\in\PHl_a\times\PHl_b,a_i\neq b_j$;
-\item $\PHa = \{ \PHfrappe{a_i}{b_j}{b_k}, \dots \mid
-					(a,b)\in\PHs^2 \wedge (a_i,b_j,b_k)\in \PHl_a\times\PHl_b\times\PHl_b$ \\
-	\hspace*{2cm} $\wedge b_j\neq b_k \wedge a=b\Rightarrow a_i=b_j\}$
-			is the finite set of \emph{actions}.
+the finite set of \emph{processes} of sort $a\in\Sigma$ and $l_a$ a positive integer, with $a\neq b\Rightarrow \PHl_a \cap \PHl_b = \emptyset$;
+\item $\PHa = \{ \PHfrappe{a_i}{b_j}{b_k} \in \PHl_a \times \PHl_b \times \PHl_b \mid (a,b) \in \PHs^2
+  \wedge b_j\neq b_k \wedge a=b\Rightarrow a_i=b_j\}$ is the finite set of \emph{actions}.
 \end{itemize}
 %$\PHproc$ denotes the set of all processes ($\PHproc \DEF \{ a_i\mid a\in\PHs \wedge a_i\in\PHl_a\}$).
 \end{definition}
