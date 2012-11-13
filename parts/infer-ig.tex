@@ -2,7 +2,6 @@
 
 In order to infer a complete BRN, one has to find the Interaction Graph (IG) first, as some constraints on the parametrization rely on it.
 Inferring the IG is an abstraction step which consists, from atomistic actions of a PH, in determining the global influence of every component on each of its successors.
-%We consider hereafter a global PH $(\PHs,\PHl,\PHa)$ on which the IG inference is to be performed.
 
 This step assumes that the studied PH defines two types of sorts: the sorts corresponding to BRN components, which will appear in the IG, and the cooperative sorts.
 The identification of these two sets of sorts relies on the observation of their possible behavior, which in both cases observe some rules.
@@ -10,17 +9,11 @@ The identification of these two sets of sorts relies on the observation of their
 
 
 \paragraph{IG Inference}\label{ssec:infer-IG}
-%Inferring the underlying IG of a PH consists in finding the influence of each regulator of every component, in order to determine the sets $E_+$ and $E_-$.
-%We aim at inferring that $b$ activates (inhibits) $a$ if there exists a configuration where increasing the level of $b$ makes possible the increase (decrease) of the level of $a$.
-%
 Inferring global influences of a predecessor $b$ on a component $a$ requires to find “local influences” from this predecessor first, by considering a given state and changing only the active process of $b$.
 The aim is to compare the set of processes towards which the component $a$ will evolve, for each active process of $b$, leaving the active process of all the other sorts unchanged.
 Indeed, if after increasing the level of $b$ (\ie activating a higher process of $b$) we notice that $a$ tends to reach a higher (\resp lower) level, we can then deduce that $b$ activates (\resp inhibits) $a$ in this selected state.
-%In fact, the enumeration of all possible states can be restrained to sub-states on the predecessors of $a$ only, thus excluding components that have no influence on $a$.
 Of course, only predecessors of $a$ have to be considered.
-%, thus excluding components that have no influence on $a$.
 
-%The knowledge of all the local influences then allows to infer all global influences between components.
 This has to be observed on every possible state in order to infer a local influence.
 Indeed, if all local influences of $b$ on $a$ are the same (activations or inhibitions) we can deduce that the global influence of $b$ on $a$ is also the same, and the related threshold is the lowest level of $b$ for which we can observe such an influence.
 An unsigned edge with no threshold is inferred if two different local influences are found, or in particular cases (when a behavior cannot be represented as a BRN).

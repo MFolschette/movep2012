@@ -10,9 +10,6 @@ An \emph{Interaction Graph} (IG) is a triple $(\Gamma, E_+, E_-)$ where $\Gamma$
 and $E_+$ (\resp $E_-$) $\subset \{a \xrightarrow{t} b \mid a, b \in \Gamma \wedge t \in [1; l_a]\}$
 is the set of positive (\resp negative) \emph{regulations} between two nodes, labeled with a \emph{threshold}.
 A regulation from $a$ to $b$ is unique.
-%if $a \xrightarrow{t} b \in E_+$ (\resp $E_-$),
-%then $\nexists a \xrightarrow{t'} b \in E_+ \text{ (\resp $E_-$)}, t' \neq t$
-%and $\nexists a \xrightarrow{t'} b \in E_-\text{ (\resp $E_+$)}, t' \in \mathbb{N}$.
 \end{definition}
 
 \noindent
@@ -23,9 +20,6 @@ A \emph{state} $s$ of an IG $(\Gamma, E_+, E_-)$ is an element in $\prod_{a \in 
 and $\GRNget{s}{a}$ refers to the level of component $a$ in $s$.
 
 The specificity of Thomas' approach lies in the use of discrete \emph{parameters} to represent focal level intervals (\pref{def:param}).
-%Using intervals instead of sole natural numbers adds some expressivity.
-%While the use of intervals as parameters does not add expressivity in Boolean networks, it allows to specify a larger range of dynamics in the general case (w.r.t. a fixed IG).
-%Indeed, if a parameter is an interval of three values, it is impossible to split the three cases with the boolean definition of resources.
 
 \begin{definition}[Discrete parameter $K_{x,A,B}$ and Parametrization $K$]\label{def:param}
 Let $x \in \Gamma$ be a given component and $A$ (\resp $B$) $\subset \GRNreg{x}$ a set of its \emph{activators} (\resp \emph{inhibitors}),
@@ -60,10 +54,6 @@ where $a_i$ is the component $a$ at level $i$.
 \node[inner sep=0] (a) at (2,0) {a};
 \node[inner sep=0] (b) at (0,0) {b};
 \node[inner sep=0] (c) at (3.5,0) {c};
-%\path
-%  node[elabel, below=-1em of a] {$0..2$}
-%  node[elabel, below=-1em of b] {$0..1$}
-%  node[elabel, below=-1em of c] {$0..1$};
 \path[->]
   (b) edge[bend right] node[elabel, below=-3pt] {$1+$} (a)
   (c) edge node[elabel, above=-5pt] {$1+$} (a)

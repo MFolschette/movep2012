@@ -26,19 +26,13 @@ the finite set of \emph{processes} of sort $a\in\Sigma$ and $l_a$ a positive int
 \item $\PHa = \{ \PHfrappe{a_i}{b_j}{b_k} \in \PHl_a \times \PHl_b \times \PHl_b \mid (a,b) \in \PHs^2
   \wedge b_j\neq b_k \wedge a=b\Rightarrow a_i=b_j\}$ is the finite set of \emph{actions}.
 \end{itemize}
-%$\PHproc$ denotes the set of all processes ($\PHproc \DEF \{ a_i\mid a\in\PHs \wedge a_i\in\PHl_a\}$).
 \end{definition}
 
 \noindent
-%The sort of a process $a_i$ is referred to as $\PHsort(a_i)=a$ and the set of %sorts present in an action $h\in\PHa$ as  %$\PHsort(h) = \{\PHsort(\PHhitter(h)),\PHsort(\PHtarget(h))\}$.
 Given a state $s\in \PHl$, the process of sort $a\in\PHs$ present in $s$ is denoted by $\PHget{s}{a}$.
-%, that is the $a$-coordinate of the state $s$.
-%If $a_i\in \PHl_a$, we define the notation $a_i\in s \EQDEF \PHget{s}{a}=a_i$.
-%For all sort $a \in \PHs$, $\PHdirectpredec{a} \DEF \{b \in \PHs \mid \exists \PHfrappe{b_i}{a_j}{a_k}\in\PHa \}$ is the set of its direct predecessors.
 An action $h=\PHfrappe{a_i}{b_j}{b_k} \in \PHa$ is \emph{playable} in $s \in L$ if and only if $\PHget{s}{a}=a_i$ and $\PHget{s}{b} = b_j$.
 In such a case, $(s\play h)$ stands for the state resulting from the play of the action $h$ in $s$, with
 $\PHget{(s\play h)}{b} = b_k$ and $\forall c \in \PHs, c \neq b, \PHget{(s\play h)}{c} = \PHget{s}{c}$.
-%For the sake of clarity, $((s\play h)\play h')$, $h'\in\PHa$ is abbreviated as $(s\play h\play h')$.
 
 \paragraph{Modeling cooperation.}
 As described in \cite{PMR10-TCSB}, the cooperation between processes to make another process bounce can be
@@ -53,16 +47,6 @@ Then, to represent the cooperation between processes $b_1$ and $c_1$,
 the process $bc_{11}$ hits $a_1$ to make it bounce to $a_2$ instead of
 independent hits from $b_1$ and $c_1$.
 The same cooperative sort is used to make $b_0$ and $c_0$ cooperate to hit $a_1$ and make it bounce to $a_0$.
-
-\begin{comment}
-We note that cooperative sorts are standard PH sorts and do not involve any
-special treatment regarding the semantics of related actions.
-However, it is worth noticing they introduce a temporal shift in their application.
-This allows the existence of interleaving of actions leading to a cooperative sort representing a
-past sub-state of the presence of the cooperative processes.
-The resulting behavior is then an over-approximation
-of the realization of an instantaneous cooperation.
-\end{comment}
 
 \begin{example*}
 \pref{fig:runningPH} represents a PH $(\PHs,\PHl,\PHa)$ with especially:
@@ -90,7 +74,6 @@ Indeed, the reachability of $a_2$ and $a_0$ is conditioned by a cooperation of $
 \TSetTick{bc}{1}{01}
 \TSetTick{bc}{2}{10}
 \TSetTick{bc}{3}{11}
-% \TSetSortLbcel{bc}{$\neg a\wedge b$}
 \TSort{(-0.5,-2)}{bc}{4}{b}
 
 \THit{b_1}{bend right}{bc_0}{.north}{bc_2}
